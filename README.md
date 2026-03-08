@@ -1,0 +1,1 @@
+Bounce Ballistic is a turned-based tower defence game where the player must fire projectiles at enemy shapes and try to combo as many hits as possible. Enemies can move, heal, consolidate, and have other mechanics. Projectiles will have their own unqiue features to keep the game interesting.
