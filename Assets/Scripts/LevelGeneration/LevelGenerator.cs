@@ -1,0 +1,248 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.WebSockets;
+using Unity.Loading;
+using Unity.VisualScripting;
+using UnityEngine;
+
+namespace LevelGeneration
+{
+    [RequireComponent(typeof(MeshFilter))]
+    public class LevelGenerator : MonoBehaviour
+    {
+        [SerializeField]
+        Vector2 LevelCenter;
+        [SerializeField]
+        int Radius;
+        [SerializeField]
+        int NoSides;
+        [SerializeField]
+        GameObject DebugMarkerPrefab;
+        [SerializeField]
+        float BallSize;
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            GenerateLevel();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        private void GenerateLevel()
+        {
+            GeneratePolygon(LevelCenter, Radius, NoSides);
+        }
+
+        private void GeneratePolygon(Vector2 center, int radius, int noSides)
+        {
+            var circle = new Circle(center, radius);
+            var maxAngle = 360f;
+            var angleBetweenVertices = maxAngle / noSides;
+            var noVertices = noSides + 1; // plus one for center vertex
+            Vector2[] vertices = new Vector2[noVertices];
+            var triangleSegments = new TriangleSegment[noSides];
+
+            var colours = new Color[]
+            {
+                Color.black,
+                Color.red,
+                Color.cyan,
+                Color.blue,
+                Color.gray,
+                Color.yellow,
+                Color.green,
+                Color.magenta,
+                Color.black,
+                Color.red
+            };
+
+            var vertexIndex = 0;
+            for (float angle = 0f; angle <= maxAngle; angle += angleBetweenVertices)
+            {
+                var vertex = GetVertexOnCircumference(angle, circle);
+                vertices[vertexIndex] = vertex;
+
+                if (vertexIndex > 0) // create TriangleSegment object
+                {
+                    var v1 = circle.Center;
+                    var v2 = vertex;
+                    var v3 = vertices[vertexIndex - 1];
+
+                    var triangleSegment = new TriangleSegment(v1, v2, v3, BallSize);
+
+                    var triangleSegIndex = vertexIndex - 1;
+
+                    triangleSegments[triangleSegIndex] = triangleSegment;
+                    DebugShowWalkableSquares(triangleSegment.GetAllSpacePositions(), colours[3]);
+                }
+        
+                vertexIndex++;
+            }
+
+            vertices[noVertices - 1] = circle.Center;
+
+            GetComponent<MeshFilter>().mesh = BuildMesh(vertices); // assign mesh component
+        }
+
+        private Mesh BuildMesh(Vector2[] vertices)
+        {
+            Vector3[] vertices3d = new Vector3[vertices.Length];
+
+            for (int vi = vertices.Length - 1; vi >= 0; vi--) // convert vector2s to vector3s for mesh
+            {
+                var v2 = vertices[vi];
+                vertices3d[vi] = new Vector3(v2.x, v2.y, 0);
+                var triangleVertexGO = Instantiate(DebugMarkerPrefab, vertices3d[vi], Quaternion.identity);
+                triangleVertexGO.transform.localScale = new Vector3(BallSize, BallSize, BallSize);
+            }
+
+            int centerVertex = NoSides;
+
+            var triangleIndices = new int[NoSides * 3];
+
+            int c1 = 1;
+            int c2 = 2;
+            for (int i = 0; i < triangleIndices.Length; i += 3)
+            {
+                triangleIndices[i] = centerVertex;
+                triangleIndices[i + 1] = c1;
+                triangleIndices[i + 2] = c2;
+                c1++;
+                c2++;
+                if (c1 == centerVertex)
+                    c1 = 0;
+                if (c2 == centerVertex)
+                    c2 = 0;
+            }
+
+            Mesh mesh = new Mesh
+            {
+                vertices = vertices3d,
+                triangles = triangleIndices
+            };
+
+            mesh.RecalculateNormals();
+            return mesh;
+        }
+
+        private Vector2 GetVertexOnCircumference(float angleDegrees, Circle circle)
+        {
+            var center = circle.Center;
+            var radius = circle.Radius;
+            var degreeRadians = angleDegrees * (Mathf.PI / 180);
+            var x = center.x + (radius * Mathf.Cos(degreeRadians));
+            var y = center.y + (radius * Mathf.Sin(degreeRadians));
+
+            return new Vector2(x, y);
+        }
+
+        private void DebugShowWalkableSquares(Vector2[] walkableSquares, Color colour)
+        {
+            foreach (var square in walkableSquares)
+            {
+                var squareGO = Instantiate(DebugMarkerPrefab, square, Quaternion.identity);
+                squareGO.transform.localScale = new Vector3(BallSize, BallSize, BallSize);
+                squareGO.GetComponent<SpriteRenderer>().color = colour;
+            }
+        }
+    }
+
+    internal class Circle
+    {
+        public Vector2 Center;
+        public int Radius;
+        public int Circumference;
+
+        public Circle(Vector2 center, int radius)
+        {
+            Center = center;
+            Radius = radius;
+            SetCircumference();
+        }
+
+        private void SetCircumference()
+        {
+            Circumference = (int)(2 * Mathf.PI * Radius);
+        }
+    }
+
+    internal class TriangleSegment
+    {
+        internal Vector2[] Vertices;
+        internal Row[] Rows;
+        public TriangleSegment(Vector2 centerVertex, Vector2 v2, Vector2 v3, float ballSize)
+        {
+            Vertices = new Vector2[]
+            {
+                centerVertex,
+                v2,
+                v3
+            };
+
+            var distanceBetweenPoints = ballSize;
+            var increment = 0.05f;
+            var fullDistance = 1.0f;
+
+            var rows = new List<Row>();
+
+            for (float posA = increment; posA < fullDistance; posA += increment)
+            {
+                var newPoint1 = InterpolatePoint(centerVertex, v2, posA);
+                var newPoint2 = InterpolatePoint(centerVertex, v3, posA);
+
+                var distance = Vector2.Distance(newPoint1, newPoint2);
+                var percentage = distanceBetweenPoints / distance;
+
+                var spaces = new List<Space>();
+
+                for (float posB = percentage; posB < fullDistance; posB += percentage)
+                {
+                    var spacePosition = InterpolatePoint(newPoint1, newPoint2, posB);
+                    spaces.Add(new Space(spacePosition));
+                }
+
+                rows.Add(new Row(spaces.ToArray()));
+            }
+
+            Rows = rows.ToArray();
+        }
+
+        private Vector2 InterpolatePoint(Vector2 v1, Vector2 v2, float percentage) // move point a to point b
+        {
+            return (1 - percentage) * v1 + percentage * v2;
+        }
+
+        internal Vector2[] GetAllSpacePositions()
+        {
+            return Rows.SelectMany(r => r.Spaces).Select(sp => sp.Position).ToArray();
+        }
+    }
+
+    internal class Row
+    {
+        internal Space[] Spaces;
+        internal Row(Space[] spaces)
+        {
+            Spaces = spaces;
+        }
+    }
+
+    internal class Space
+    {
+        internal Vector2 Position;
+        internal bool ContainsBall;
+
+        internal Space(Vector2 position)
+        {
+            Position = position;
+            ContainsBall = false;
+        }
+    }
+}
