@@ -6,6 +6,7 @@ namespace Assets.Scripts.Level
 {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(BallManager))]
+    [RequireComponent(typeof(GameStageGenerator))]
     public class LevelGenerator : MonoBehaviour
     {
         internal TriangleSegment[] TriangleSegments;
@@ -25,8 +26,8 @@ namespace Assets.Scripts.Level
 
         void Awake()
         {
-            GenerateLevel();
-            InitialiseBallManager();
+            //GenerateLevel();
+            //InitialiseBallManager();
         }
         // Update is called once per frame
         void Update()
@@ -34,10 +35,14 @@ namespace Assets.Scripts.Level
 
         }
 
-        private void InitialiseBallManager()
+        internal void Initialise()
         {
-            var ballManager = GetComponent<BallManager>();
-            ballManager.Initialise();
+            GenerateLevel();
+        }
+
+        internal LevelData GetLevelData()
+        {
+            return new LevelData(this);
         }
 
         private void GenerateLevel()
@@ -266,13 +271,66 @@ namespace Assets.Scripts.Level
     {
         internal Row ContainingRow;
         internal Vector2 Position;
-        internal bool ContainsBall;
+        internal Ball ContainedBall { get => BallManager.GetBallById(BallId); }
+        internal bool ContainsBall { get => BallId > -1; }
+        internal int BallId;
+        internal BallManager BallManager;
 
         internal Space(Vector2 position, Row containingRow)
         {
             ContainingRow = containingRow;
             Position = position;
-            ContainsBall = false;
+            BallId = -1;
+        }
+    }
+
+    internal class LevelData
+    {
+        internal Row[] StartRows;
+        internal TriangleSegment[] TriangleSegments;
+        internal Space[] Spaces;
+        internal int SegmentCount;
+        internal int StartRowSpaceCount;
+        internal LevelData(LevelGenerator level)
+        {
+            TriangleSegments = level.TriangleSegments;
+            StartRows = GetStartRows(TriangleSegments);
+            Spaces = InitSpaces(TriangleSegments);
+
+            SegmentCount = TriangleSegments.Length;
+            StartRowSpaceCount = StartRows[0].Spaces.Length; // assumes all start row lengths are the same, should be 👀
+        }
+
+        private Space[] InitSpaces(TriangleSegment[] triangles)
+        {
+            var spaces = new List<Space>();
+
+            foreach (var triangle in triangles)
+            {
+                foreach (var row in triangle.Rows)
+                {
+                   foreach (var space in row.Spaces)
+                    {
+                        spaces.Add(space);
+                    }
+                }                
+            }
+
+            return spaces.ToArray();
+        }
+
+        private Row[] GetStartRows(TriangleSegment[] triangles)
+        {
+            Row[] startRows = new Row[triangles.Length];
+            var count = 0;
+            foreach (var triangle in triangles)
+            {
+                var row = triangle.Rows[^1];
+                startRows[count] = row;
+                count++; 
+            }
+
+            return startRows;
         }
     }
 }
