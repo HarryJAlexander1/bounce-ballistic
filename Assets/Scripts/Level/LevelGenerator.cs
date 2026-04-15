@@ -1,17 +1,16 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.WebSockets;
-using Unity.Loading;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace LevelGeneration
+namespace Assets.Scripts.Level
 {
     [RequireComponent(typeof(MeshFilter))]
+    [RequireComponent(typeof(BallManager))]
+    [RequireComponent(typeof(GameStageGenerator))]
     public class LevelGenerator : MonoBehaviour
     {
+        internal TriangleSegment[] TriangleSegments;
+
         [SerializeField]
         Vector2 LevelCenter;
         [SerializeField]
@@ -22,17 +21,28 @@ namespace LevelGeneration
         GameObject DebugMarkerPrefab;
         [SerializeField]
         float BallSize;
+        [SerializeField]
+        bool ShowWalkableVertices;
 
-        // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
-            GenerateLevel();
+            //GenerateLevel();
+            //InitialiseBallManager();
         }
-
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        internal void Initialise()
+        {
+            GenerateLevel();
+        }
+
+        internal LevelData GetLevelData()
+        {
+            return new LevelData(this);
         }
 
         private void GenerateLevel()
@@ -48,20 +58,6 @@ namespace LevelGeneration
             var noVertices = noSides + 1; // plus one for center vertex
             Vector2[] vertices = new Vector2[noVertices];
             var triangleSegments = new TriangleSegment[noSides];
-
-            var colours = new Color[]
-            {
-                Color.black,
-                Color.red,
-                Color.cyan,
-                Color.blue,
-                Color.gray,
-                Color.yellow,
-                Color.green,
-                Color.magenta,
-                Color.black,
-                Color.red
-            };
 
             var vertexIndex = 0;
             for (float angle = 0f; angle <= maxAngle; angle += angleBetweenVertices)
@@ -80,7 +76,9 @@ namespace LevelGeneration
                     var triangleSegIndex = vertexIndex - 1;
 
                     triangleSegments[triangleSegIndex] = triangleSegment;
-                    DebugShowWalkableSquares(triangleSegment.GetAllSpacePositions(), colours[3]);
+
+                    if (ShowWalkableVertices)    
+                        DebugShowWalkableVertices(triangleSegment.GetAllSpacePositions(), 6);
                 }
         
                 vertexIndex++;
@@ -89,6 +87,7 @@ namespace LevelGeneration
             vertices[noVertices - 1] = circle.Center;
 
             GetComponent<MeshFilter>().mesh = BuildMesh(vertices); // assign mesh component
+            TriangleSegments = triangleSegments;
         }
 
         private Mesh BuildMesh(Vector2[] vertices)
@@ -143,13 +142,27 @@ namespace LevelGeneration
             return new Vector2(x, y);
         }
 
-        private void DebugShowWalkableSquares(Vector2[] walkableSquares, Color colour)
+        private void DebugShowWalkableVertices(Vector2[] walkableSquares, int colourIndex)
         {
+             var colours = new Color[]
+            {
+                Color.black,
+                Color.red,
+                Color.cyan,
+                Color.blue,
+                Color.gray,
+                Color.yellow,
+                Color.green,
+                Color.magenta,
+                Color.black,
+                Color.red
+            };
+
             foreach (var square in walkableSquares)
             {
                 var squareGO = Instantiate(DebugMarkerPrefab, square, Quaternion.identity);
                 squareGO.transform.localScale = new Vector3(BallSize, BallSize, BallSize);
-                squareGO.GetComponent<SpriteRenderer>().color = colour;
+                squareGO.GetComponent<SpriteRenderer>().color = colours[colourIndex];
             }
         }
     }
@@ -179,6 +192,11 @@ namespace LevelGeneration
         internal Row[] Rows;
         public TriangleSegment(Vector2 centerVertex, Vector2 v2, Vector2 v3, float ballSize)
         {
+            Initialise(centerVertex, v2, v3, ballSize);
+        }
+
+        private void Initialise(Vector2 centerVertex, Vector2 v2, Vector2 v3, float ballSize)
+        {
             Vertices = new Vector2[]
             {
                 centerVertex,
@@ -192,6 +210,8 @@ namespace LevelGeneration
 
             var rows = new List<Row>();
 
+            var rowCount = 0;
+
             for (float posA = increment; posA < fullDistance; posA += increment)
             {
                 var newPoint1 = InterpolatePoint(centerVertex, v2, posA);
@@ -200,18 +220,34 @@ namespace LevelGeneration
                 var distance = Vector2.Distance(newPoint1, newPoint2);
                 var percentage = distanceBetweenPoints / distance;
 
+                var row = new Row();
                 var spaces = new List<Space>();
 
                 for (float posB = percentage; posB < fullDistance; posB += percentage)
                 {
                     var spacePosition = InterpolatePoint(newPoint1, newPoint2, posB);
-                    spaces.Add(new Space(spacePosition));
+                    var space = new Space(spacePosition, row);
+                    spaces.Add(space);
                 }
 
-                rows.Add(new Row(spaces.ToArray()));
+                row.Spaces = spaces.ToArray();
+                rows.Add(row);
+                rowCount++;
             }
 
             Rows = rows.ToArray();
+
+            AssignChildren(Rows);
+        }
+
+        private void AssignChildren(Row[] rows)
+        {
+            for (int rowIndex = rows.Length - 1; rowIndex > 0; rowIndex--)
+            {
+                var row = Rows[rowIndex];
+                var childRow = Rows[rowIndex - 1];
+                row.ChildRow = childRow;
+            }
         }
 
         private Vector2 InterpolatePoint(Vector2 v1, Vector2 v2, float percentage) // move point a to point b
@@ -228,21 +264,73 @@ namespace LevelGeneration
     internal class Row
     {
         internal Space[] Spaces;
-        internal Row(Space[] spaces)
-        {
-            Spaces = spaces;
-        }
+        internal Row ChildRow;
     }
 
     internal class Space
     {
+        internal Row ContainingRow;
         internal Vector2 Position;
-        internal bool ContainsBall;
+        internal Ball ContainedBall { get => BallManager.GetBallById(BallId); }
+        internal bool ContainsBall { get => BallId > -1; }
+        internal int BallId;
+        internal BallManager BallManager;
 
-        internal Space(Vector2 position)
+        internal Space(Vector2 position, Row containingRow)
         {
+            ContainingRow = containingRow;
             Position = position;
-            ContainsBall = false;
+            BallId = -1;
+        }
+    }
+
+    internal class LevelData
+    {
+        internal Row[] StartRows;
+        internal TriangleSegment[] TriangleSegments;
+        internal Space[] Spaces;
+        internal int SegmentCount;
+        internal int StartRowSpaceCount;
+        internal LevelData(LevelGenerator level)
+        {
+            TriangleSegments = level.TriangleSegments;
+            StartRows = GetStartRows(TriangleSegments);
+            Spaces = InitSpaces(TriangleSegments);
+
+            SegmentCount = TriangleSegments.Length;
+            StartRowSpaceCount = StartRows[0].Spaces.Length; // assumes all start row lengths are the same, should be 👀
+        }
+
+        private Space[] InitSpaces(TriangleSegment[] triangles)
+        {
+            var spaces = new List<Space>();
+
+            foreach (var triangle in triangles)
+            {
+                foreach (var row in triangle.Rows)
+                {
+                   foreach (var space in row.Spaces)
+                    {
+                        spaces.Add(space);
+                    }
+                }                
+            }
+
+            return spaces.ToArray();
+        }
+
+        private Row[] GetStartRows(TriangleSegment[] triangles)
+        {
+            Row[] startRows = new Row[triangles.Length];
+            var count = 0;
+            foreach (var triangle in triangles)
+            {
+                var row = triangle.Rows[^1];
+                startRows[count] = row;
+                count++; 
+            }
+
+            return startRows;
         }
     }
 }

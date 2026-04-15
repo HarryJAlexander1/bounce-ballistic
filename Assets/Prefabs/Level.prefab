@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 7232693534494330988}
   - component: {fileID: 7431102452396293914}
   - component: {fileID: 1084774750773828204}
+  - component: {fileID: 1478464529258279112}
+  - component: {fileID: 7571316615146647606}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -47,8 +49,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelCenter: {x: 0, y: 0}
-  Radius: 6
+  Radius: 5
   NoSides: 10
+  DebugMarkerPrefab: {fileID: 3916466067565576597, guid: 143060a59781186a4bfee7c70ac4c497, type: 3}
+  BallSize: 0.15
+  ShowWalkableVertices: 0
 --- !u!33 &7431102452396293914
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -99,3 +104,32 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1478464529258279112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5226203360016119730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da681097ebc754742ab4e107059c065c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BallPrefab: {fileID: 3916466067565576597, guid: 143060a59781186a4bfee7c70ac4c497, type: 3}
+  BallSize: 0.15
+  BallAmount: 2
+  MaxBallLevel: 5
+  EnableDebug: 1
+--- !u!114 &7571316615146647606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5226203360016119730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daf2e3edc2968091eaefc5d9eee6cb17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
