@@ -28,9 +28,7 @@ namespace Assets.Scripts.Level
         internal List<Ball> ActiveBalls;
         private int BallCount; // represents all balls ever spawned in game, used for ballIds;
         private HashSet<int> BallsToDeleteIds;
-        internal Queue<Ball> QueuedBalls;
         
-
         // Start is called before the first frame update
         void Start()
         {
@@ -46,7 +44,6 @@ namespace Assets.Scripts.Level
         internal void Initialise(ref LevelData levelData)
         {
             LevelData = levelData;
-            QueuedBalls = new Queue<Ball>();
             ActiveBalls = new List<Ball>();
             BallsToDeleteIds = new HashSet<int>();
             //QueueBalls(BallAmount);
@@ -84,12 +81,29 @@ namespace Assets.Scripts.Level
             foreach (var balltoDeleteId in BallsToDeleteIds)
             {
                 var ball = GetBallById(balltoDeleteId);
-                ball.Delete();
-                Destroy(ball.BallGameObject);
-                ActiveBalls.Remove(ball);
+                DeleteBall(ref ball);
             }
 
             BallsToDeleteIds.Clear();
+        }
+
+        private void DeleteBall(ref Ball ball)
+        {
+            ball.Delete();
+            Destroy(ball.BallGameObject);
+            ActiveBalls.Remove(ball);
+        }
+
+        internal void ClearBalls()
+        {
+            var activeBallsSnapshot = ActiveBalls.ToArray();
+
+            for (int index = 0; index < activeBallsSnapshot.Length; index++)
+            {
+                var ballId = activeBallsSnapshot[index].BallId;
+                var ball = GetBallById(ballId);
+                DeleteBall(ref ball);
+            }
         }
 
         private void MoveBall(Ball ball)
@@ -140,34 +154,24 @@ namespace Assets.Scripts.Level
                 BallsToDeleteIds.Add(ballToUpgrade.BallId);
         }
 
-        internal void QueueBalls(BallSpawn[] ballSpawnData)
-        {     
-            foreach (var ballSpawn in ballSpawnData)
-            {
-                var ball = new Ball(this, ballSpawn);
-                QueuedBalls.Enqueue(ball);
-            }
-        }
-
-        internal void SpawnBalls()
-         { 
+        internal void SpawnBalls(BallSpawn[] ballSpawnData)
+        { 
             if (ActiveBalls.Count > 0)
                 MoveBalls();
 
-            var ballAmount = QueuedBalls.Count;
-
-            if (ballAmount == 0)
+            if (ballSpawnData == null || ballSpawnData.Length == 0)
                 return;
 
-            while ( ballAmount > 0 )
+            var ballAmount = ballSpawnData.Length;
+
+            foreach (var ballSpawn in ballSpawnData)
             {
-                var ball = QueuedBalls.Dequeue();
+                var ball = new Ball(this, ballSpawn);
                 var spawnLocation = ball.BallSpawnLocation;
                 Row row = LevelData.StartRows[spawnLocation.Item1];
                 var availableSpaces = row.Spaces.Where(s => !s.ContainsBall).ToArray();
                 Space space = availableSpaces[spawnLocation.Item2];
                 SpawnBall(space, ball);
-                ballAmount--;
             }
         }
 
