@@ -104,27 +104,9 @@ namespace Assets.Scripts.Level
             var maxSegmentIndex = segmentCount - 1;
             var maxSpaceIndex = spaceCount - 1;
 
-            (int, int) spawnLocations = (maxSegmentIndex, maxSpaceIndex); // minus 1 for zero indexing
+            (int, int) spawnLocations = (maxSegmentIndex, maxSpaceIndex);
 
             int ballSpawnCounter = 0;
-
-            while (ballSpawnCounter < ballAmount)
-            {
-                ballSpawns[ballSpawnCounter] = new BallSpawn{ SpawnLoc = spawnLocations };
-                
-                spawnLocations.Item2--;
-                ballSpawnCounter++;
-
-                if (spawnLocations.Item2 == -1)
-                {
-                    spawnLocations.Item1--;
-                    spawnLocations.Item2 = maxSpaceIndex;
-                }
-
-            }
-
-            ballSpawnCounter = 0;
-            
             var ballLevelIndex = 0;
             var amountSpawnedPerLevel = 0;
             var amountToSpawnPerLevel = ballAmountsPerLevel[0];
@@ -138,10 +120,21 @@ namespace Assets.Scripts.Level
                     amountToSpawnPerLevel = ballAmountsPerLevel[ballLevelIndex];
                 }
 
-                ballSpawns[ballSpawnCounter].BallLevel = ballLevelIndex + 1;
-                amountSpawnedPerLevel++;
-                ballSpawnCounter++;
+                if (spawnLocations.Item2 == -1)
+                {
+                    spawnLocations.Item1--;
+                    spawnLocations.Item2 = maxSpaceIndex;
+                }
 
+                ballSpawns[ballSpawnCounter] = new BallSpawn
+                { 
+                    SpawnLoc = spawnLocations, 
+                    BallLevel = ballLevelIndex + 1 
+                };
+                
+                spawnLocations.Item2--;
+                ballSpawnCounter++;
+                amountSpawnedPerLevel++;
             }
 
             return new TurnData{ BallSpawnData = ballSpawns };
