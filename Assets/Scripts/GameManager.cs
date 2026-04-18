@@ -101,22 +101,26 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 17,
-                            BallLevelRatios = new int[3] {8, 1, 1}
+                            BallLevelRatios = new int[3] {8, 1, 1},
+                            StartingSpawnLocation = (4, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 17,
-                            BallLevelRatios = new int[3] {6, 3, 1}
+                            BallLevelRatios = new int[3] {6, 3, 1},
+                            StartingSpawnLocation = (5, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 25,
-                            BallLevelRatios = new int[3] {6, 3, 1}
+                            BallLevelRatios = new int[3] {6, 3, 1},
+                            StartingSpawnLocation = (6, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 25,
-                            BallLevelRatios = new int[3] {4, 4, 2}
+                            BallLevelRatios = new int[3] {4, 4, 2},
+                            StartingSpawnLocation = (100, 300)
                         }
                     }
                 },
@@ -127,22 +131,26 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 27,
-                            BallLevelRatios = new int[3] {5, 3, 2}
+                            BallLevelRatios = new int[3] {5, 3, 2},
+                            StartingSpawnLocation = (7, 10)
                         },
                         new TurnConfig
                         {
                             BallAmount = 33,
-                            BallLevelRatios = new int[3] {4, 4, 2}
+                            BallLevelRatios = new int[3] {4, 4, 2},
+                            StartingSpawnLocation = (8, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 47,
-                            BallLevelRatios = new int[3] {3, 5, 2}
+                            BallLevelRatios = new int[3] {3, 5, 2},
+                            StartingSpawnLocation = (5, 5)
                         },
                         new TurnConfig
                         {
                             BallAmount = 53,
-                            BallLevelRatios = new int[3] {2, 6, 2}
+                            BallLevelRatios = new int[3] {2, 6, 2},
+                            StartingSpawnLocation = (6, 10)
                         }
                     }
                 },
@@ -153,32 +161,38 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 33,
-                            BallLevelRatios = new int[3] {4, 4, 2}
+                            BallLevelRatios = new int[3] {4, 4, 2},
+                            StartingSpawnLocation = (4, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 40,
-                            BallLevelRatios = new int[3] {3, 5, 2}
+                            BallLevelRatios = new int[3] {3, 5, 2},
+                            StartingSpawnLocation = (7, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 50,
-                            BallLevelRatios = new int[3] {2, 6, 2}
+                            BallLevelRatios = new int[3] {2, 6, 2},
+                            StartingSpawnLocation = (3, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 60,
-                            BallLevelRatios = new int[3] {2, 5, 3}
+                            BallLevelRatios = new int[3] {2, 5, 3},
+                            StartingSpawnLocation = (8, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 73,
-                            BallLevelRatios = new int[3] {1, 6, 3}
+                            BallLevelRatios = new int[3] {1, 6, 3},
+                            StartingSpawnLocation = (5, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 87,
-                            BallLevelRatios = new int[3] {1, 5, 4}
+                            BallLevelRatios = new int[3] {1, 5, 4},
+                            StartingSpawnLocation = (6, 8)
                         }
                     }
                 },
@@ -189,22 +203,26 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 43,
-                            BallLevelRatios = new int[3] {4, 3, 3}
+                            BallLevelRatios = new int[3] {4, 3, 3},
+                            StartingSpawnLocation = (4, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 60,
-                            BallLevelRatios = new int[3] {1, 6, 3}
+                            BallLevelRatios = new int[3] {1, 6, 3},
+                            StartingSpawnLocation = (7, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 87,
-                            BallLevelRatios = new int[3] {1, 5, 4}
+                            BallLevelRatios = new int[3] {1, 5, 4},
+                            StartingSpawnLocation = (3, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 113,
-                            BallLevelRatios = new int[3] {0, 6, 4}
+                            BallLevelRatios = new int[3] {0, 6, 4},
+                            StartingSpawnLocation = (8, 9)
                         }
                     }
                 },
@@ -215,22 +233,26 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 50,
-                            BallLevelRatios = new int[3] {3, 5, 2}
+                            BallLevelRatios = new int[3] {3, 5, 2},
+                            StartingSpawnLocation = (5, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 67,
-                            BallLevelRatios = new int[3] {2, 5, 3}
+                            BallLevelRatios = new int[3] {2, 5, 3},
+                            StartingSpawnLocation = (6, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 93,
-                            BallLevelRatios = new int[3] {1, 5, 4}
+                            BallLevelRatios = new int[3] {1, 5, 4},
+                            StartingSpawnLocation = (4, 10)
                         },
                         new TurnConfig
                         {
                             BallAmount = 120,
-                            BallLevelRatios = new int[3] {0, 4, 6}
+                            BallLevelRatios = new int[3] {0, 4, 6},
+                            StartingSpawnLocation = (7, 7)
                         }
                     }
                 },
@@ -241,32 +263,38 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 60,
-                            BallLevelRatios = new int[3] {2, 5, 3}
+                            BallLevelRatios = new int[3] {2, 5, 3},
+                            StartingSpawnLocation = (3, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 73,
-                            BallLevelRatios = new int[3] {1, 5, 4}
+                            BallLevelRatios = new int[3] {1, 5, 4},
+                            StartingSpawnLocation = (8, 10)
                         },
                         new TurnConfig
                         {
                             BallAmount = 83,
-                            BallLevelRatios = new int[3] {1, 4, 5}
+                            BallLevelRatios = new int[3] {1, 4, 5},
+                            StartingSpawnLocation = (5, 10)
                         },
                         new TurnConfig
                         {
                             BallAmount = 107,
-                            BallLevelRatios = new int[3] {0, 4, 6}
+                            BallLevelRatios = new int[3] {0, 4, 6},
+                            StartingSpawnLocation = (6, 6)
                         },
                         new TurnConfig
                         {
                             BallAmount = 133,
-                            BallLevelRatios = new int[3] {0, 3, 7}
+                            BallLevelRatios = new int[3] {0, 3, 7},
+                            StartingSpawnLocation = (4, 11)
                         },
                         new TurnConfig
                         {
                             BallAmount = 160,
-                            BallLevelRatios = new int[3] {0, 2, 8}
+                            BallLevelRatios = new int[3] {0, 2, 8},
+                            StartingSpawnLocation = (7, 11)
                         }
                     }
                 },
@@ -277,22 +305,26 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 67,
-                            BallLevelRatios = new int[3] {2, 4, 4}
+                            BallLevelRatios = new int[3] {2, 4, 4},
+                            StartingSpawnLocation = (3, 5)
                         },
                         new TurnConfig
                         {
                             BallAmount = 83,
-                            BallLevelRatios = new int[3] {1, 4, 5}
+                            BallLevelRatios = new int[3] {1, 4, 5},
+                            StartingSpawnLocation = (8, 5)
                         },
                         new TurnConfig
                         {
                             BallAmount = 117,
-                            BallLevelRatios = new int[3] {0, 4, 6}
+                            BallLevelRatios = new int[3] {0, 4, 6},
+                            StartingSpawnLocation = (5, 11)
                         },
                         new TurnConfig
                         {
                             BallAmount = 150,
-                            BallLevelRatios = new int[3] {0, 3, 7}
+                            BallLevelRatios = new int[3] {0, 3, 7},
+                            StartingSpawnLocation = (6, 5)
                         }
                     }
                 },
@@ -303,32 +335,38 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 73,
-                            BallLevelRatios = new int[3] {1, 5, 4}
+                            BallLevelRatios = new int[3] {1, 5, 4},
+                            StartingSpawnLocation = (4, 6)
                         },
                         new TurnConfig
                         {
                             BallAmount = 93,
-                            BallLevelRatios = new int[3] {1, 3, 6}
+                            BallLevelRatios = new int[3] {1, 3, 6},
+                            StartingSpawnLocation = (9, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 100,
-                            BallLevelRatios = new int[3] {0, 3, 7}
+                            BallLevelRatios = new int[3] {0, 3, 7},
+                            StartingSpawnLocation = (10, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 133,
-                            BallLevelRatios = new int[3] {0, 3, 7}
+                            BallLevelRatios = new int[3] {0, 3, 7},
+                            StartingSpawnLocation = (3, 11)
                         },
                         new TurnConfig
                         {
                             BallAmount = 167,
-                            BallLevelRatios = new int[3] {0, 2, 8}
+                            BallLevelRatios = new int[3] {0, 2, 8},
+                            StartingSpawnLocation = (12, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 200,
-                            BallLevelRatios = new int[3] {0, 1, 9}
+                            BallLevelRatios = new int[3] {0, 1, 9},
+                            StartingSpawnLocation = (9, 10)
                         }
                     }
                 },
@@ -339,22 +377,26 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 83,
-                            BallLevelRatios = new int[3] {1, 4, 5}
+                            BallLevelRatios = new int[3] {1, 4, 5},
+                            StartingSpawnLocation = (11, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 100,
-                            BallLevelRatios = new int[3] {0, 3, 7}
+                            BallLevelRatios = new int[3] {0, 3, 7},
+                            StartingSpawnLocation = (10, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 140,
-                            BallLevelRatios = new int[3] {0, 2, 8}
+                            BallLevelRatios = new int[3] {0, 2, 8},
+                            StartingSpawnLocation = (13, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 180,
-                            BallLevelRatios = new int[3] {0, 1, 9}
+                            BallLevelRatios = new int[3] {0, 1, 9},
+                            StartingSpawnLocation = (14, 8)
                         }
                     }
                 },
@@ -365,32 +407,38 @@ public class GameManager : MonoBehaviour
                         new TurnConfig
                         {
                             BallAmount = 93,
-                            BallLevelRatios = new int[3] {0, 3, 7}
+                            BallLevelRatios = new int[3] {0, 3, 7},
+                            StartingSpawnLocation = (15, 9)
                         },
                         new TurnConfig
                         {
                             BallAmount = 117,
-                            BallLevelRatios = new int[3] {0, 2, 8}
+                            BallLevelRatios = new int[3] {0, 2, 8},
+                            StartingSpawnLocation = (16, 7)
                         },
                         new TurnConfig
                         {
                             BallAmount = 133,
-                            BallLevelRatios = new int[3] {0, 1, 9}
+                            BallLevelRatios = new int[3] {0, 1, 9},
+                            StartingSpawnLocation = (14, 10)
                         },
                         new TurnConfig
                         {
                             BallAmount = 167,
-                            BallLevelRatios = new int[3] {0, 1, 9}
+                            BallLevelRatios = new int[3] {0, 1, 9},
+                            StartingSpawnLocation = (13, 8)
                         },
                         new TurnConfig
                         {
                             BallAmount = 217,
-                            BallLevelRatios = new int[3] {0, 0, 10}
+                            BallLevelRatios = new int[3] {0, 0, 10},
+                            StartingSpawnLocation = (15, 6)
                         },
                         new TurnConfig
                         {
                             BallAmount = 267,
-                            BallLevelRatios = new int[3] {0, 0, 10}
+                            BallLevelRatios = new int[3] {0, 0, 10},
+                            StartingSpawnLocation = (16, 10)
                         }
                     }
                 }
