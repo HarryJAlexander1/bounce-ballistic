@@ -87,6 +87,19 @@ namespace Assets.Scripts.Level
             BallsToDeleteIds.Clear();
         }
 
+        internal void RemoveBall(GameObject ballGameObject)
+        {
+            if (ballGameObject == null || ActiveBalls == null)
+                return;
+
+            var ball = ActiveBalls.FirstOrDefault(b => b.BallGameObject == ballGameObject);
+
+            if (ball == null)
+                return;
+
+            DeleteBall(ref ball);
+        }
+
         private void DeleteBall(ref Ball ball)
         {
             ball.Delete();

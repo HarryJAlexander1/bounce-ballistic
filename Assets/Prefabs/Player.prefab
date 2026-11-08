@@ -129,4 +129,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f3e68ea855f0614889f3baaf1130b9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ProjectilePrefab: {fileID: 5582903804814339133, guid: 2828d54c70a3a8340a23e15b65b0ecf6, type: 3}
+  ProjectilePrefab: {fileID: 9159773078924810910, guid: 129fc670ea72d8840933417cb186d516, type: 3}
+  LevelGenerator: {fileID: 0}

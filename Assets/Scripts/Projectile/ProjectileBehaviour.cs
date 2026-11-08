@@ -27,6 +27,14 @@ public class ProjectileBehaviour : MonoBehaviour
         Translate();
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<BallBehaviour>() == null)
+            return;
+
+        BounceFromCollision(collision);
+    }
+
     public void Activate(Vector2 targetPosition, Vector2[] boundaryVertices) 
     {
         _direction = (targetPosition - (Vector2)transform.position).normalized;
@@ -34,7 +42,21 @@ public class ProjectileBehaviour : MonoBehaviour
         Destroy(gameObject, BallLifeTimeSeconds);
     }
 
-    private void Translate() 
+    private void BounceFromCollision(Collision2D collision)
+    {
+        if (collision.contactCount <= 0 || _direction == Vector2.zero)
+            return;
+
+        var normal = collision.GetContact(0).normal;
+
+        if (Vector2.Dot(_direction, normal) > 0f)
+            normal = -normal;
+
+        _direction = Vector2.Reflect(_direction, normal).normalized;
+        transform.position = (Vector2)transform.position + (normal * CollisionSkin);
+    }
+
+    private void Translate() // AI generated
     {
         if (_direction == Vector2.zero)
             return;
@@ -67,7 +89,7 @@ public class ProjectileBehaviour : MonoBehaviour
         Vector2 moveEnd,
         out Vector2 hitPoint,
         out Vector2 edgeNormal,
-        out float distanceTravelled)
+        out float distanceTravelled) // AI generated
     {
         hitPoint = Vector2.zero;
         edgeNormal = Vector2.zero;
@@ -120,7 +142,7 @@ public class ProjectileBehaviour : MonoBehaviour
         Vector2 q1,
         Vector2 q2,
         out float t,
-        out float u)
+        out float u) // AI generated
     {
         t = 0f;
         u = 0f;

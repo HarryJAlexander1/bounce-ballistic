@@ -105,8 +105,8 @@ namespace Assets.Scripts.Level
             {
                 var v2 = vertices[vi];
                 vertices3d[vi] = new Vector3(v2.x, v2.y, 0);
-                var triangleVertexGO = Instantiate(DebugMarkerPrefab, vertices3d[vi], Quaternion.identity);
-                triangleVertexGO.transform.localScale = new Vector3(BallSize, BallSize, BallSize);
+                //var triangleVertexGO = Instantiate(DebugMarkerPrefab, vertices3d[vi], Quaternion.identity);
+                //triangleVertexGO.transform.localScale = new Vector3(BallSize, BallSize, BallSize);
             }
 
             int centerVertex = NoSides;
