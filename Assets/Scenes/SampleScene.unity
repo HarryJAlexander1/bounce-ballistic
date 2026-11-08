@@ -244,7 +244,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79b2f7b8061c5ed785e9f3acd4f0ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LevelPosition: {x: 0, y: 0, z: 0}
   LevelPrefab: {fileID: 5226203360016119730, guid: 93ad56ae7ef157f7681d626b83aa9861, type: 3}
+  LevelGenerator: {fileID: 0}
+  BallManager: {fileID: 0}
+  GameStageGenerator: {fileID: 0}
+  PlayerPrefab: {fileID: 8870085179230592789, guid: ee419369e9bde3e49a36894f0c44aed0, type: 3}
 --- !u!4 &792553298
 Transform:
   m_ObjectHideFlags: 0

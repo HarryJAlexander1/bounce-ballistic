@@ -10,6 +10,7 @@ namespace Assets.Scripts.Level
     public class LevelGenerator : MonoBehaviour
     {
         internal TriangleSegment[] TriangleSegments;
+        private Vector2[] _perimeterVertices;
 
         [SerializeField]
         Vector2 LevelCenter;
@@ -43,6 +44,11 @@ namespace Assets.Scripts.Level
         internal LevelData GetLevelData()
         {
             return new LevelData(this);
+        }
+
+        internal Vector2[] GetPerimeterVertices()
+        {
+            return _perimeterVertices?.ToArray() ?? new Vector2[0];
         }
 
         private void GenerateLevel()
@@ -85,6 +91,7 @@ namespace Assets.Scripts.Level
             }
 
             vertices[noVertices - 1] = circle.Center;
+            _perimeterVertices = vertices.Take(noSides).ToArray();
 
             GetComponent<MeshFilter>().mesh = BuildMesh(vertices); // assign mesh component
             TriangleSegments = triangleSegments;

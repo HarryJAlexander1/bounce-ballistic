@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     Queue<GameStage> GameStages;
 
+    [SerializeField]
+    GameObject PlayerPrefab;
+
+    GameObject Player;
+
     GameStage ActiveGameStage;
 
     GameObject Level;
@@ -44,7 +49,7 @@ public class GameManager : MonoBehaviour
         InitLevelData(); // level data object - used amongst other objects
         InitGameStageGenerator(); // 
         InitBallManager();
-
+        InitPlayerObject();
         BeginStage();
     }
 
@@ -66,6 +71,11 @@ public class GameManager : MonoBehaviour
         {
             InitGameStageGenerator();
         }
+    }
+
+    private void InitPlayerObject() 
+    {
+        Player = Instantiate(PlayerPrefab, new Vector3(0, 0, 0), quaternion.identity);
     }
  
     private void InitLevelGameObject()
