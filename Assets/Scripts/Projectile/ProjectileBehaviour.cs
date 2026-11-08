@@ -13,6 +13,8 @@ public class ProjectileBehaviour : MonoBehaviour
     private float Speed;
     [SerializeField]
     private float CollisionSkin = 0.001f;
+    [SerializeField]
+    private int BallLifeTimeSeconds = 5;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,7 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         _direction = (targetPosition - (Vector2)transform.position).normalized;
         _boundaryVertices = boundaryVertices ?? new Vector2[0];
+        Destroy(gameObject, BallLifeTimeSeconds);
     }
 
     private void Translate() 
